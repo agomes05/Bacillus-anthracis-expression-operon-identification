@@ -5,42 +5,48 @@
 # 5. Compare the 3 resulting motifs to answer: "Are gerA, gerB, gerK regulated the same way?"
 # 6. Validate: Check that each motif appears in both species
 
-from gibbs_sampler import gibbs_sampler
+import os
+from gibbs_sampler import gibbs_sampler_per_operon
+
+base_dir = os.path.dirname(__file__)
+anthracis_dir = os.path.join(base_dir, "B. anthracis sequences")
+cereus_dir = os.path.join(base_dir, "B. cereus sequences")
 
 # --- CONSTANTS --- #
 
 # Divided by operons because we want to see the consistency across species for each operon
 FILES_TO_PROCESS = {
-        "gerA": [
-            "BA-GERA250BP.fasta",
-            "BA-GERA500BP.fasta",
-            "BA-GERA1000BP.fasta",
-            "BC-GERA250BP.fasta",
-            "BC-GERA500BP.fasta",
-            "BC-GERA1000BP.fasta",
-        ],
-        "gerB": [
-            "BA-GERB250BP.fasta",
-            "BA-GERB500BP.fasta",
-            "BA-GERB1000BP.fasta",
-            "BC-GERB250BP.fasta",
-            "BC-GERB500BP.fasta",
-            "BC-GERB1000BP.fasta",
-        ],
-        "gerK": [
-            "BA-GERK250BP.fasta",
-            "BA-GERK500BP.fasta",
-            "BA-GERK1000BP.fasta",
-            "BC-GERK250BP.fasta",
-            "BC-GERK500BP.fasta",
-            "BC-GERK1000BP.fasta",
-        ]
-    }
+    "gerA": [
+        os.path.join(anthracis_dir, "BA-GERA250BP.fasta"),
+        os.path.join(anthracis_dir, "BA-GERA500BP.fasta"),
+        os.path.join(anthracis_dir, "BA-GERA1000BP.fasta"),
+        os.path.join(cereus_dir, "BC-GERA250BP.fasta"),
+        os.path.join(cereus_dir, "BC-GERA500BP.fasta"),
+        os.path.join(cereus_dir, "BC-GERA1000BP.fasta"),
+    ],
+    "gerB": [
+        os.path.join(anthracis_dir, "BA-GERB250BP.fasta"),
+        os.path.join(anthracis_dir, "BA-GERB500BP.fasta"),
+        os.path.join(anthracis_dir, "BA-GERB1000BP.fasta"),
+        os.path.join(cereus_dir, "BC-GERB250BP.fasta"),
+        os.path.join(cereus_dir, "BC-GERB500BP.fasta"),
+        os.path.join(cereus_dir, "BC-GERB1000BP.fasta"),
+    ],
+    "gerK": [
+        os.path.join(anthracis_dir, "BA-GERK250BP.fasta"),
+        os.path.join(anthracis_dir, "BA-GERK500BP.fasta"),
+        os.path.join(anthracis_dir, "BA-GERK1000BP.fasta"),
+        os.path.join(cereus_dir, "BC-GERK250BP.fasta"),
+        os.path.join(cereus_dir, "BC-GERK500BP.fasta"),
+        os.path.join(cereus_dir, "BC-GERK1000BP.fasta"),
+    ],
+}
 
 K = 10  # Length of the motif to find
 
 if __name__ == "__main__":
-    for filename, species, operon, sequence_size in FILES_TO_PROCESS:
-        print(f"Processing {filename} for {species} {operon} with sequence size {sequence_size}...")
-        results = gibbs_sampler(filename, species, operon, sequence_size)
-        print(f"Results for {filename}: {results}\n")
+    for operon, filenames in FILES_TO_PROCESS.items():
+        for filename in filenames:
+            print(f"Processing {filename} for {operon}...")
+            results = gibbs_sampler_per_operon({operon: [filename]}, K, t=6, num_runs=100)
+            print(f"Results for {filename}: {results}\n")
