@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 1. Write read_fasta() to return a single sequence string
 # 2. Create group_files_by_operon() to organize your 18 files into 3 groups
 # 3. Write run_gibbs_by_operon() to run Gibbs on each group (6 sequences each)
@@ -9,6 +10,10 @@ sys.path.append("/Users/alexchrostowski/Desktop/Bioinformatics Algorithms ")
  
 from gibbs_sampler import gibbs_sampler_per_operon
 from HierarchalClustering import Hierarchal_clustering
+=======
+import pandas as pd
+from gibbs_sampler import distance_matrix, gibbs_sampler_per_operon
+>>>>>>> d53cd785ec44d518503272de031b2c1665fe0f1b
 
 # --- CONSTANTS --- #
 
@@ -54,6 +59,7 @@ def matrix_for_clustering(motifs):
     return matrix 
 
 if __name__ == "__main__":
+<<<<<<< HEAD
     all_results = gibbs_sampler_per_operon(FILES_TO_PROCESS, k=10, t=6, num_runs=200)
     for operon, results in all_results.items():
         print(f"\nResults for {operon}:")
@@ -68,3 +74,22 @@ if __name__ == "__main__":
         print("clusters:")
         for cluster in clusters:
             print(cluster)
+=======
+    all_results = gibbs_sampler_per_operon(FILES_TO_PROCESS, k=10, t=6, num_runs=20)
+    motifs = {
+        "gerA_BA": all_results["gerA"]["motif"][0], # Indices 0-2 are the motifs from B. anthracis
+        "gerA_BC": all_results["gerA"]["motif"][3], # Indices 3-5 are the motifs from B. cereus
+        "gerB_BA": all_results["gerB"]["motif"][0],
+        "gerB_BC": all_results["gerB"]["motif"][3],
+        "gerK_BA": all_results["gerK"]["motif"][0],
+        "gerK_BC": all_results["gerK"]["motif"][3]
+    }
+    print("Motifs identified for each operon and species:")
+    for key, motif in motifs.items():
+        print(f"{key}: {motif}")
+    
+    dist_matrix = distance_matrix(motifs)
+    print("\nDistance Matrix:")
+    dist_matrix_df = pd.DataFrame(dist_matrix, index=motifs.keys(), columns=motifs.keys())
+    print(dist_matrix_df)
+>>>>>>> d53cd785ec44d518503272de031b2c1665fe0f1b
