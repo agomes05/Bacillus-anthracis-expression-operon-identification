@@ -1,6 +1,7 @@
 # Implement the Gibbs sampler for motif finding in DNA sequences
 
 import sys
+import numpy as np
 sys.path.append('Arthur code')
 from arthur_gibbs_sampler import gibbs_sampler
 from arthur_greedy_motif_search_pseudocounts import score_motifs_pc
@@ -26,21 +27,7 @@ def read_fasta(filename: str) -> str:
     return sequence
 
 
-def hamming_distance(seq1: str, seq2: str) -> int:
-    """Calculate the Hamming distance, number of positions at which the corresponding symbols are different, between two sequences.
-    
-    Args:
-        seq1 (str): The first sequence.
-        seq2 (str): The second sequence.
-
-    Returns:
-        distance (int): The Hamming distance between the two sequences.
-    """
-    
-    return sum(el1 != el2 for el1, el2 in zip(seq1, seq2))
-
-
-def gibbs_sampler_per_operon(operon_groups: dict, k: int = 10, t: int = 6, num_runs: int = 100) -> dict:
+def gibbs_sampler_per_operon(operon_groups: dict, k: int = 10, t: int = 6, num_runs: int = 20) -> dict:
     """
     Run the Gibbs sampler on a given FASTA file and return the identified motifs.
 
@@ -80,4 +67,39 @@ def gibbs_sampler_per_operon(operon_groups: dict, k: int = 10, t: int = 6, num_r
     return all_results
 
 
+def hamming_distance(seq1: str, seq2: str) -> int:
+    """Calculate the Hamming distance, number of positions at which the corresponding symbols are different, between two sequences.
+    
+    Args:
+        seq1 (str): The first sequence.
+        seq2 (str): The second sequence.
+
+    Returns:
+        distance (int): The Hamming distance between the two sequences.
+    """
+    
+    return sum(el1 != el2 for el1, el2 in zip(seq1, seq2))
+
+
+def distance_matrix(motifs: dict) -> list:
+    """Calculate the distance matrix for a set of motifs.
+    
+    Args:
+        motifs (dict): A dictionary mapping motif names to their sequences.
+        
+    Returns:
+        matrix (list): A 2D list representing the distance matrix.
+    """
+    
+    motif_names = list(motifs.keys())
+    sequences = list(motifs.values())
+    matrix = np.zeros((len(motif_names), len(sequences)), dtype=int)
+    
+    for i in range(len(motif_names)):
+        for j in range(i + 1, len(sequences)):
+            distance = hamming_distance(sequences[i], sequences[j])
+            matrix[i][j] = distance
+            matrix[j][i] = distance  # Symmetric matrix
+    
+    return matrix
 
