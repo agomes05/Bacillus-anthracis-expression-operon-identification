@@ -26,6 +26,20 @@ def read_fasta(filename: str) -> str:
     return sequence
 
 
+def hamming_distance(seq1: str, seq2: str) -> int:
+    """Calculate the Hamming distance, number of positions at which the corresponding symbols are different, between two sequences.
+    
+    Args:
+        seq1 (str): The first sequence.
+        seq2 (str): The second sequence.
+
+    Returns:
+        distance (int): The Hamming distance between the two sequences.
+    """
+    
+    return sum(el1 != el2 for el1, el2 in zip(seq1, seq2))
+
+
 def gibbs_sampler_per_operon(operon_groups: dict, k: int = 10, t: int = 6, num_runs: int = 100) -> dict:
     """
     Run the Gibbs sampler on a given FASTA file and return the identified motifs.
