@@ -1,6 +1,6 @@
 # Implement the Gibbs sampler for motif finding in DNA sequences
 
-files_to_process = [
+FILES_TO_PROCESS = [
 #   (filename, species, open, sequence size)
     ("B. anthracis sequences/BA-GERA250BP.fasta", "B. anthracis", "gerA", 250),
     ("B. anthracis sequences/BA-GERA500BP.fasta", "B. anthracis", "gerA", 500),
