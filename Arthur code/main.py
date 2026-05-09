@@ -1,8 +1,5 @@
-import sys
-sys.path.append("/Users/alexchrostowski/Desktop/Bioinformatics Algorithms ")
- 
 from gibbs_sampler import gibbs_sampler_per_operon
-from HierarchalClustering import Hierarchal_clustering
+from hierarchichal_clustering import hierarchical_clustering
 import pandas as pd
 from gibbs_sampler import distance_matrix, gibbs_sampler_per_operon
 
@@ -50,20 +47,20 @@ def matrix_for_clustering(motifs):
     return matrix 
 
 if __name__ == "__main__":
-    all_results = gibbs_sampler_per_operon(FILES_TO_PROCESS, k=10, t=6, num_runs=200)
-    for operon, results in all_results.items():
-        print(f"\nResults for {operon}:")
-        for filename, motif in zip(results["sequences"], results["motif"]):
-            print(filename, motif)
-        print("Score:", results["score"])
-        matrix = matrix_for_clustering(results["motif"])
-        print("distance matrix:")
-        for row in matrix: 
-            print(row)
-        clusters = Hierarchal_clustering(len(results["motif"]), matrix)
-        print("clusters:")
-        for cluster in clusters:
-            print(cluster)
+    # all_results = gibbs_sampler_per_operon(FILES_TO_PROCESS, k=10, t=6, num_runs=200)
+    # for operon, results in all_results.items():
+    #     print(f"\nResults for {operon}:")
+    #     for filename, motif in zip(results["sequences"], results["motif"]):
+    #         print(filename, motif)
+    #     print("Score:", results["score"])
+    #     matrix = matrix_for_clustering(results["motif"])
+    #     print("distance matrix:")
+    #     for row in matrix: 
+    #         print(row)
+    #     clusters = Hierarchal_clustering(len(results["motif"]), matrix)
+    #     print("clusters:")
+    #     for cluster in clusters:
+    #         print(cluster)
     all_results = gibbs_sampler_per_operon(FILES_TO_PROCESS, k=10, t=6, num_runs=20)
     motifs = {
         "gerA_BA": all_results["gerA"]["motif"][0], # Indices 0-2 are the motifs from B. anthracis
@@ -81,3 +78,7 @@ if __name__ == "__main__":
     print("\nDistance Matrix:")
     dist_matrix_df = pd.DataFrame(dist_matrix, index=motifs.keys(), columns=motifs.keys())
     print(dist_matrix_df)
+    clusters = hierarchical_clustering(len(motifs), dist_matrix)
+    print("\nHierarchical Clustering Result:")
+    for cluster in clusters:
+        print(cluster)

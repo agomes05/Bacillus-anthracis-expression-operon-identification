@@ -20,7 +20,7 @@ def average_distance(cluster1, cluster2, matrix):
             count += 1
     return total / count
         
-def Hierarchal_clustering(n, matrix):
+def hierarchical_clustering(n, matrix):
     clusters = []
     for i in range(1, n +1):
         clusters.append([i])
