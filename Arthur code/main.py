@@ -40,19 +40,9 @@ FILES_TO_PROCESS = {
 K = 10  # Length of the motif to find
 
 if __name__ == "__main__":
-
-    all_results = gibbs_sampler_per_operon(
-        FILES_TO_PROCESS,
-        k=10,
-        t=6,
-        num_runs=100
-    )
-
+    all_results = gibbs_sampler_per_operon(FILES_TO_PROCESS, k=10, t=6, num_runs=100)
     for operon, results in all_results.items():
-
         print(f"\nResults for {operon}:")
-
         for filename, motif in zip(results["sequences"], results["motif"]):
             print(filename, motif)
-
         print("Score:", results["score"])
