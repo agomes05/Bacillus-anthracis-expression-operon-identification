@@ -1,8 +1,8 @@
 import sys
 sys.path.append('/Users/arthurgomes/Documents/CSCI/CSCI321/Rosalind 1/GreedyMotifSearch with Pseudocounts')
-from greedy_motif_search_pseudocounts import build_profile_pc, score_motifs_pc
+from arthur_greedy_motif_search_pseudocounts import build_profile_pc, score_motifs_pc
 sys.path.append('/Users/arthurgomes/Documents/CSCI/CSCI321/Rosalind 1/Profile-most Probable k-mer')
-from profile_most_probable import profile_most_probable_kmer
+from arthur_profile_most_probable import profile_most_probable_kmer
 import random
 
 def gibbs_sampler(dna, k, t, N):

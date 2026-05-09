@@ -3,7 +3,7 @@ import numpy as np
 
 # Make sure this path still points to your profile_most_probable function!
 sys.path.append('/Users/arthurgomes/Documents/CSCI/CSCI321/Rosalind 1/Profile-most Probable k-mer')
-from profile_most_probable import profile_most_probable_kmer
+from arthur_profile_most_probable import profile_most_probable_kmer
 
 DNA = "ACGT"
 

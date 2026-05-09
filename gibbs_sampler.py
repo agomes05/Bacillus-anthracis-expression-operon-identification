@@ -1,26 +1,9 @@
 # Implement the Gibbs sampler for motif finding in DNA sequences
 
-FILES_TO_PROCESS = [
-#   (filename, species, open, sequence size)
-    ("B. anthracis sequences/BA-GERA250BP.fasta", "B. anthracis", "gerA", 250),
-    ("B. anthracis sequences/BA-GERA500BP.fasta", "B. anthracis", "gerA", 500),
-    ("B. anthracis sequences/BA-GERA100BP.fasta", "B. anthracis", "gerA", 1000),
-    ("B. anthracis sequences/BA-GERB250BP.fasta", "B. anthracis", "gerA", 250),
-    ("B. anthracis sequences/BA-GERB500BP.fasta", "B. anthracis", "gerA", 500),
-    ("B. anthracis sequences/BA-GERB1000BP.fasta", "B. anthracis", "gerA", 1000),
-    ("B. anthracis sequences/BA-GERK250BP.fasta", "B. anthracis", "gerA", 250),
-    ("B. anthracis sequences/BA-GERK500BP.fasta", "B. anthracis", "gerA", 500),
-    ("B. anthracis sequences/BA-GERK1000BP.fasta", "B. anthracis", "gerA", 1000),
-    (),
-    (),
-    (),
-    (),
-    (),
-    (),
-    (),
-    (),
-    (),
-]
+import sys
+sys.path.append('Arthur code')
+from arthur_gibbs_sampler import gibbs_sampler
+from arthur_greedy_motif_search_pseudocounts import score_motifs_pc
 
 def read_fasta(filename: str) -> str:
     """Read a FASTA file and return the concatenated DNA sequence as a string.
@@ -42,11 +25,45 @@ def read_fasta(filename: str) -> str:
             
     return sequence
 
-def gibbs_sampler(filename, species, operon, sequence_size):
+
+def gibbs_sampler_per_operon(operon_groups: dict, k: int = 10, t: int = 6, num_runs: int = 100) -> dict:
+    """
+    Run the Gibbs sampler on a given FASTA file and return the identified motifs.
+
+    Args:
+        operon_groups (dict): A dictionary mapping operon names to lists of FASTA files.
+        k (int): The length of the motif to find.
+        t (int): The number of sequences to consider.
+        num_runs (int): The number of iterations for the Gibbs sampler.
+
+    Returns:
+        all_results (dict): A dictionary mapping operon names to lists of identified motifs.
     """
     
+    all_results = {}
     
-    """
-    all_results = []
+    # Go through each operon and its associated FASTA files
+    for operon, filenames in operon_groups.items():
+        # Help from Claude Code Python-ifying this for-loop
+        sequences = [read_fasta(filename) for filename in filenames]
+        best_motif = None
+        best_score = float('inf')
+        
+        # Run the Gibbs sampler multiple times to find the best motif
+        for run in range(num_runs):
+            motifs = gibbs_sampler(sequences, k, t, num_runs)
+            score = score_motifs_pc(motifs)
+            if score < best_score:
+                best_score = score
+                best_motif = motifs[:]
+    
+        all_results[operon] = {
+                "motif": best_motif,
+                "score": best_score,
+                "sequences": filenames
+            }
     
     return all_results
+
+
+
