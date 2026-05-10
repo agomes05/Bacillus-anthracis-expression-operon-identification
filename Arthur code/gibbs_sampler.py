@@ -1,5 +1,5 @@
 # Implement the Gibbs sampler for motif finding in DNA sequences
-
+from tqdm import tqdm
 import sys
 import numpy as np
 sys.path.append('Arthur code')
@@ -27,7 +27,7 @@ def read_fasta(filename: str) -> str:
     return sequence
 
 
-def gibbs_sampler_per_operon(operon_groups: dict, k: int = 10, t: int = 6, num_runs: int = 20) -> dict:
+def gibbs_sampler_per_operon(operon_groups: dict, k: int = 10, t: int = 6, num_runs: int = 20, allotted_memory: int = 100) -> dict:
     """
     Run the Gibbs sampler on a given FASTA file and return the identified motifs.
 
@@ -51,12 +51,18 @@ def gibbs_sampler_per_operon(operon_groups: dict, k: int = 10, t: int = 6, num_r
         best_score = float('inf')
         
         # Run the Gibbs sampler multiple times to find the best motif
-        for run in range(num_runs):
+        chipman_valley = 0 
+        for run in tqdm(range(num_runs), desc=f"Processing {operon}"):
             motifs = gibbs_sampler(sequences, k, t, num_runs)
             score = score_motifs_pc(motifs)
             if score < best_score:
                 best_score = score
                 best_motif = motifs[:]
+                chipman_valley = 0 
+            else: 
+                chipman_valley += 1 
+            if chipman_valley >= allotted_memory:
+                break 
     
         all_results[operon] = {
                 "motif": best_motif,

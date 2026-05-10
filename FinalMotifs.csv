@@ -1,0 +1,19 @@
+operon,filename,motif,score
+gerA,B. anthracis sequences/BA-GERA250BP.fasta,TTATTTGTAT,3
+gerA,B. anthracis sequences/BA-GERA500BP.fasta,TTATTTTTCT,3
+gerA,B. anthracis sequences/BA-GERA1000BP.fasta,TTATTTTTCT,3
+gerA,B. cereus sequences/BC-GERA250BP.fasta,TTATTTTTAT,3
+gerA,B. cereus sequences/BC-GERA500BP.fasta,TTATTTTTAT,3
+gerA,B. cereus sequences/BC-GERA1000BP.fasta,TTATTTTTAT,3
+gerB,B. anthracis sequences/BA-GERB250BP.fasta,GACAAAATAT,3
+gerB,B. anthracis sequences/BA-GERB500BP.fasta,GACAAAATAT,3
+gerB,B. anthracis sequences/BA-GERB1000BP.fasta,GACAAAATAT,3
+gerB,B. cereus sequences/BC-GERB250BP.fasta,GACAAATTAT,3
+gerB,B. cereus sequences/BC-GERB500BP.fasta,GACAAATTAT,3
+gerB,B. cereus sequences/BC-GERB1000BP.fasta,GACAAATTAT,3
+gerK,B. anthracis sequences/BA-GERK250BP.fasta,AGCAAAAATT,0
+gerK,B. anthracis sequences/BA-GERK500BP.fasta,AGCAAAAATT,0
+gerK,B. anthracis sequences/BA-GERK1000BP.fasta,AGCAAAAATT,0
+gerK,B. cereus sequences/BC-GERK250BP.fasta,AGCAAAAATT,0
+gerK,B. cereus sequences/BC-GERK500BP.fasta,AGCAAAAATT,0
+gerK,B. cereus sequences/BC-GERK1000BP.fasta,AGCAAAAATT,0

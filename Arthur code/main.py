@@ -1,3 +1,4 @@
+from tqdm import tqdm
 from gibbs_sampler import gibbs_sampler_per_operon
 from hierarchichal_clustering import hierarchical_clustering
 import pandas as pd
@@ -34,7 +35,6 @@ FILES_TO_PROCESS = {
 }
 
 K = 10  # Length of the motif to find
-
 def mod_hamming_distance(motif1, motif2):
     return sum(motif1[i] != motif2[i] for i in range(len(motif1)))
 def matrix_for_clustering(motifs):
@@ -47,38 +47,42 @@ def matrix_for_clustering(motifs):
     return matrix 
 
 if __name__ == "__main__":
-    # all_results = gibbs_sampler_per_operon(FILES_TO_PROCESS, k=10, t=6, num_runs=200)
-    # for operon, results in all_results.items():
-    #     print(f"\nResults for {operon}:")
-    #     for filename, motif in zip(results["sequences"], results["motif"]):
-    #         print(filename, motif)
-    #     print("Score:", results["score"])
-    #     matrix = matrix_for_clustering(results["motif"])
-    #     print("distance matrix:")
-    #     for row in matrix: 
-    #         print(row)
-    #     clusters = Hierarchal_clustering(len(results["motif"]), matrix)
-    #     print("clusters:")
-    #     for cluster in clusters:
-    #         print(cluster)
-    all_results = gibbs_sampler_per_operon(FILES_TO_PROCESS, k=10, t=6, num_runs=20)
-    motifs = {
-        "gerA_BA": all_results["gerA"]["motif"][0], # Indices 0-2 are the motifs from B. anthracis
-        "gerA_BC": all_results["gerA"]["motif"][3], # Indices 3-5 are the motifs from B. cereus
+    all_results = gibbs_sampler_per_operon(FILES_TO_PROCESS, k=10, t=6, num_runs=2000, allotted_memory = 150)
+    motif_rows = []
+    for operon, results in all_results.items():
+        print(f"\nResults for {operon}:")
+        for filename, motif in zip(results["sequences"], results["motif"]):
+            print(filename, motif)
+            motif_rows.append({
+                "operon": operon, "filename": filename, "motif": motif, "score": results["score"]})
+        print("Score:", results["score"])
+        matrix = matrix_for_clustering(results["motif"])
+        CSV_formatrix = pd.DataFrame(matrix, index=results["sequences"], columns=results["sequences"])
+        CSV_formatrix.to_csv(f"{operon}_MATRIX_OUTPUT_FOR_DATA_AC_AG.csv")
+        print("distance matrix:")
+        for row in matrix:
+            print(row)
+        clusters = hierarchical_clustering(len(results["motif"]), matrix)
+        print("clusters:")
+        for cluster in clusters:
+            print(cluster)
+    motif_dataframe = pd.DataFrame(motif_rows)
+    motif_dataframe.to_csv("FinalMotifs.csv", index = False)
+    representative_motifs = {
+        "gerA_BA": all_results["gerA"]["motif"][0],
+        "gerA_BC": all_results["gerA"]["motif"][3],
         "gerB_BA": all_results["gerB"]["motif"][0],
         "gerB_BC": all_results["gerB"]["motif"][3],
         "gerK_BA": all_results["gerK"]["motif"][0],
-        "gerK_BC": all_results["gerK"]["motif"][3]
-    }
-    print("Motifs identified for each operon and species:")
-    for key, motif in motifs.items():
-        print(f"{key}: {motif}")
-    
-    dist_matrix = distance_matrix(motifs)
-    print("\nDistance Matrix:")
-    dist_matrix_df = pd.DataFrame(dist_matrix, index=motifs.keys(), columns=motifs.keys())
-    print(dist_matrix_df)
-    clusters = hierarchical_clustering(len(motifs), dist_matrix)
-    print("\nHierarchical Clustering Result:")
+        "gerK_BC": all_results["gerK"]["motif"][3],}
+    labels = list(representative_motifs.keys())
+    motif_values = list(representative_motifs.values())
+    dist_matrix = matrix_for_clustering(motif_values)
+    dist_matrix_for_df = pd.DataFrame(dist_matrix, index=labels, columns=labels)
+    dist_matrix_for_df.to_csv("Distance_matrix_representation.csv")
+    print("\nRepresentative motif distance matrix:")
+    print(dist_matrix_for_df)
+    clusters = hierarchical_clustering(len(motif_values), dist_matrix)
+    print("\nRepresentative motif clustering:")
     for cluster in clusters:
-        print(cluster)
+        print([labels[i - 1] for i in cluster])

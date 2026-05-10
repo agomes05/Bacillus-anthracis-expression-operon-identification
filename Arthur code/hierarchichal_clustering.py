@@ -48,7 +48,7 @@ def hierarchical_clustering(n, matrix):
     return finals
 if __name__ == "__main__":
     n, matrix = read("rosalind_ba8e.txt")
-    finals = Hierarchal_clustering(n, matrix)
+    finals = hierarchical_clustering(n, matrix)
     for cluster in finals:
         values = []
         for i in cluster:
